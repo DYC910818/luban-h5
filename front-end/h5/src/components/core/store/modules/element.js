@@ -1,5 +1,8 @@
 import Element from 'core/models/element'
 import { swapZindex, getVM } from '@/utils/element'
+import LocalPreferences, { IS_CONFIRM_BEFORE_DELETE_ELEMENT } from 'core/editor/left-panel/preferences/local-preferences.js'
+import { Modal } from 'ant-design-vue'
+import i18n from '@/locales'
 
 // actions
 export const actions = {
@@ -21,6 +24,20 @@ export const actions = {
   }
 }
 
+const confirmDelete = () => new Promise((resolve, reject) => {
+  if (LocalPreferences.get(IS_CONFIRM_BEFORE_DELETE_ELEMENT)) {
+    Modal.confirm({
+      title: i18n.t('workCard.confirmDeleteTip', { tip: `` }),
+      onOk: (close) => {
+        resolve()
+        close()
+      }
+    })
+    return
+  }
+  resolve()
+})
+
 // mutations
 export const mutations = {
   setEditingElement (state, payload) {
@@ -32,7 +49,18 @@ export const mutations = {
       ...payload
     }
   },
+  /**
+   * 元素管理：增/删/复制/上移/下移
+   * @param {*} state
+   * @param {*} {
+   *  type:  add/copy/delete/move2Top/move2Bottom 增/删/复制/上移/下移
+   *  value(elementShortcutConfig) 左侧元素列表中元素对应的配置，主要包含：
+   *   - shortcutProps：默认Props，比如一个Chart是饼图、折线图、漏斗图，可以通过此指定
+   *   - dragStyle：用于拖拽结束，确定最终放置的位置, // {left: Number, top: Number}
+   * }
+   */
   elementManager (state, { type, value }) {
+    const elementShortcutConfig = value
     const { editingPage, editingElement } = state
     const elements = editingPage.elements
     const len = elements.length
@@ -40,10 +68,12 @@ export const mutations = {
     switch (type) {
       case 'add':
         const vm = getVM(value.name)
-        vm.$options.shortcutProps = value.shortcutProps
-        // 用于拖拽结束，确定最终放置的位置
-        vm.$options.dragStyle = value.dragStyle // {left: Number, top: Number}
-        const element = new Element(vm.$options)
+        const basicElement = vm.$options
+        const element = new Element({
+          ...basicElement,
+          ...elementShortcutConfig,
+          zindex: len + 1
+        })
         elements.push(element)
         break
       case 'copy':
@@ -53,10 +83,9 @@ export const mutations = {
         {
           const index = elements.findIndex(e => e.uuid === editingElement.uuid)
           if (index !== -1) {
-            // let newElements = elements.slice()
-            // newElements.splice(index, 1)
-            // state.editingPage.elements = newElements
-            state.editingPage.elements.splice(index, 1)
+            confirmDelete().then(() => {
+              state.editingPage.elements.splice(index, 1)
+            })
           }
           state.editingElement = null
         }
@@ -82,6 +111,12 @@ export const mutations = {
         const flag = type === 'addZindex' ? 1 : -1
         const swapElement = elements.find(ele => ele.commonStyle.zindex === eleZindex + flag * 1)
         swapZindex(editingElement, swapElement)
+        break
+      case 'reOrder':
+        // 重新排序元素（用于拖拽排序）
+        // value: { newElements: Array<Element> }
+        const { newElements } = value
+        state.editingPage.elements = newElements
         break
       default:
     }

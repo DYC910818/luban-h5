@@ -22,7 +22,7 @@ export default {
     clickOutside: vClickOutside.directive
   },
   render (h) {
-    const canEdit = this.canEdit && this.editorMode === 'edit'
+    const canEdit = this.canEdit && this.editorMode === 'edit' && this.isEditingElement
     const style = {
       position: 'relative',
       color: `${this.color} !important`,
@@ -38,7 +38,7 @@ export default {
      * 比如编辑模式 h1 样式为：.ql-snow .ql-editor h1 {font-size: 2em;}
      * 因此预览模式的文字内容也需要加上 div.ql-snow > div.ql-editor 作为wrapper
      */
-    const previewText = <div class="ql-snow"><div domPropsInnerHTML={this.text} class="ql-editor ql-container"></div></div>
+    const previewText = <div><div domPropsInnerHTML={this.text}></div></div>
     return (
       <div
         onDblclick={e => {
@@ -108,6 +108,11 @@ export default {
     editorMode: PropTypes.string({
       defaultValue: 'preview', // 可选值: preview/edit
       label: '模式',
+      visible: false
+    }),
+    isEditingElement: PropTypes.boolean({
+      defaultValue: false, // 可选值: preview/edit
+      label: '是否当前元素',
       visible: false
     })
   },

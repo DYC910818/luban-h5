@@ -11,6 +11,7 @@
 import PropsEditPanel from './props.js'
 import { mapState, mapActions } from 'vuex'
 import RenderWorkMode from './work-mode.vue'
+import ShareInfo from 'core/editor/modals/share-info.js'
 
 export default {
   computed: {
@@ -27,7 +28,15 @@ export default {
     const bgEle = this.editingPage.elements.find(e => e.name === 'lbp-background')
     return (
       <div>
-        <RenderWorkMode />
+        <a-collapse expand-icon-position="right" class="mb-3">
+          <a-collapse-panel key="workInfo" header="作品信息">
+            <ShareInfo />
+          </a-collapse-panel>
+          {/* #!zh: 页面模式 */}
+          <a-collapse-panel key="pageMode" header={this.$t('editor.editPanel.common.pageMode')}>
+            <RenderWorkMode />
+          </a-collapse-panel>
+        </a-collapse>
         <PropsEditPanel
           layout="vertical"
           realEditingElement={bgEle}

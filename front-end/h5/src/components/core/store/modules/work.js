@@ -2,9 +2,9 @@ import Element from 'core/models/element'
 import strapi from '@/utils/strapi'
 import Page from 'core/models/page'
 import Work from 'core/models/work'
-import { AxiosWrapper } from '@/utils/http.js'
+import { AxiosWrapper, handleError } from '@/utils/http.js'
 // import router from '@/router.js'
-import { takeScreenshot } from '@/utils/canvas-helper.js'
+import { takeScreenshot, downloadPoster } from '@/utils/canvas-helper.js'
 
 function setLoading (commit, loadingName, isLoading) {
   commit('loading/update', { type: loadingName, payload: isLoading }, { root: true })
@@ -17,14 +17,6 @@ export const actions = {
   deployWork ({ commit }, payload = {}) {
     commit('previewWork', payload)
   },
-  // createWork ({ commit }, payload) {
-  //   strapi.createEntry('works', new Work()).then(entry => {
-  //     const routeData = router.resolve({ name: 'editor', params: { workId: entry.id } })
-  //     window.open(routeData.href, '_blank')
-  //     // 如果希望不打开新 tab，可以注释上面面两行，启用下面一行的代码即可，不过不推荐。将编辑器单独起一个页面更有利于 vuex 的数据管理
-  //     // router.replace({ name: 'editor', params: { workId: entry.id } })
-  //   })
-  // },
   updateWork ({ commit, state }, payload = {}) {
     // update work with strapi
     const work = {
@@ -63,111 +55,11 @@ export const actions = {
       }
     })
   },
-  fetchWork ({ commit, state }, workId) {
+  fetchWork ({ commit, dispatch, state }, workId) {
     return strapi.getEntry('works', workId).then(entry => {
       commit('setWork', entry)
       commit('setEditingPage')
-    })
-  },
-  fetchWorks ({ commit, dispatch, state }, workId) {
-    new AxiosWrapper({
-      dispatch,
-      commit,
-      name: 'editor/setWorks',
-      loading_name: 'fetchWorks_loading',
-      successMsg: '获取作品列表成功',
-      customRequest: strapi.getEntries.bind(strapi)
-    }).get('works', { is_template: false })
-  },
-  fetchWorksWithForms ({ commit, dispatch, state }, workId) {
-    new AxiosWrapper({
-      dispatch,
-      commit,
-      name: 'editor/setWorks',
-      loading_name: 'fetchWorks_loading',
-      successMsg: '获取作品列表成功',
-      customRequest: strapi.getEntries.bind(strapi)
-    }).get('works/has-forms', { is_template: false })
-  },
-  fetchWorkTemplates ({ commit, dispatch, state }, workId) {
-    new AxiosWrapper({
-      dispatch,
-      commit,
-      name: 'editor/setWorkTemplates',
-      loading_name: 'fetchWorkTemplates_loading',
-      successMsg: '获取模板列表成功',
-      customRequest: strapi.getEntries.bind(strapi)
-    }).get('works', { is_template: true })
-  },
-  /**
-   *
-   * @param {*} workId
-   * response demo:
-   {
-    "uuidMap2Name": {
-        "1565596393441": "姓名",
-        "1565596397671": "学校"
-    },
-    "formRecords": [
-        {
-            "id": 3,
-            "form": {
-                "1565369322603": "abc"
-            },
-            "work": 8,
-            "created_at": "2019-08-09T16:52:28.826Z",
-            "updated_at": "2019-08-09T16:52:28.832Z"
-        },
-        {
-            "id": 4,
-            "form": {
-                "1565595388440": "ddd"
-            },
-            "work": 8,
-            "created_at": "2019-08-11T07:36:54.521Z",
-            "updated_at": "2019-08-11T07:36:54.526Z"
-        },
-        {
-            "id": 5,
-            "form": {
-                "1565595388440": "acd"
-            },
-            "work": 8,
-            "created_at": "2019-08-11T07:45:22.000Z",
-            "updated_at": "2019-08-11T07:45:22.005Z"
-        },
-        {
-            "id": 6,
-            "form": {
-                "1565596393441": "b",
-                "1565596397671": "a"
-            },
-            "work": 8,
-            "created_at": "2019-08-11T07:59:00.938Z",
-            "updated_at": "2019-08-11T07:59:00.943Z"
-        },
-        {
-            "id": 7,
-            "form": {
-                "1565596393441": "b",
-                "1565596397671": "a"
-            },
-            "work": 8,
-            "created_at": "2019-08-11T07:59:37.065Z",
-            "updated_at": "2019-08-11T07:59:37.070Z"
-        }
-      ]
-    }
-   */
-  fetchFormsOfWork ({ commit, state, dispatch }, workId) {
-    // 可以 return Promise
-    new AxiosWrapper({
-      dispatch,
-      commit,
-      name: 'editor/formDetailOfWork',
-      loading_name: 'queryFormsOfWork_loading',
-      successMsg: '表单查询完毕'
-    }).get(`/works/form/query/${workId}`)
+    }).catch(handleError)
   },
   setWorkAsTemplate ({ commit, state, dispatch }, workId) {
     new AxiosWrapper({
@@ -177,15 +69,6 @@ export const actions = {
       loading_name: 'setWorkAsTemplate_loading',
       successMsg: '设置为模板成功'
     }).post(`/works/set-as-template/${workId || state.work.id}`)
-  },
-  useTemplate ({ commit, state, dispatch }, workId) {
-    return new AxiosWrapper({
-      dispatch,
-      commit,
-      // name: 'editor/formDetailOfWork',
-      loading_name: 'useTemplate_loading',
-      successMsg: '使用模板成功'
-    }).post(`/works/use-template/${workId}`)
   },
   uploadCover ({ commit, state, dispatch }, { file } = {}) {
     const formData = new FormData()
@@ -199,6 +82,9 @@ export const actions = {
       successMsg: '上传封面图成功!'
     // }).post(`/works/uploadCover/${state.work.id}`, formData)
     }).post(`/upload/`, formData)
+  },
+  downloadPoster ({ commit, state, dispatch }) {
+    downloadPoster()
   }
 }
 
@@ -230,26 +116,6 @@ export const mutations = {
   setWorkCover (state, { type, value }) {
     const [cover] = value
     state.work.cover_image_url = cover.url
-  },
-  /**
-   * payload: {
-   *  type:   @params {String} "editor/setWorks",
-   *  value:  @params {Array}  work list
-   * }
-   */
-  setWorks (state, { type, value }) {
-    value.sort((a, b) => b.id - a.id)
-    state.works = value
-  },
-  /**
-   * payload: {
-   *  type:   @params {String} "editor/setWorks",
-   *  value:  @params {Array}  work list
-   * }
-   */
-  setWorkTemplates (state, { type, value }) {
-    value.sort((a, b) => b.id - a.id)
-    state.workTemplates = value
   },
   setWork (state, work) {
     window.__work = work

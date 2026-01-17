@@ -55,6 +55,8 @@ const configureWebpack = {
     new webpack.ContextReplacementPlugin(/moment\/locale$/, /(zh-cn)$/)
   ],
   externals: {
+    echarts: 'echarts',
+    VeIndex: 'echarts'
   }
 }
 
@@ -66,7 +68,7 @@ module.exports = {
   pages: { index: page },
   devServer: {
     proxy: {
-      '^/auth|upload|content-manager|users-permissions|works|admin|psd-files|workforms|third-libs|engine-assets/': {
+      '^/auth|upload|content-manager|users-permissions|works|scripts|datasources|admin|psd-files|workforms|third-libs|engine-assets/': {
         target,
         changeOrigin: true,
         ws: false

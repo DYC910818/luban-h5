@@ -33,17 +33,20 @@ export default {
     preview: '预览',
     createNewWork: '创建新作品',
     edit: '编辑',
-    view: '查看作品'
+    delete: '删除',
+    view: '查看作品',
+    confirmDeleteTip: '确认删除 {tip}？'
   },
   basicData: {
     viewData: '查看数据'
   },
   editor: {
     sidebar: {
-      components: '组件列表',
-      pages: '页面管理',
+      components: '组件',
+      pages: '页面',
       templates: '模板',
-      tree: '组件树'
+      tree: '组件树',
+      preferences: '偏好'
     },
     pageManager: {
       title: '第{index}页面',
@@ -84,7 +87,8 @@ export default {
       importPSD: '导入PSD',
       zoomIn: '缩小{hotkey}',
       zoomOut: '放大{hotkey}',
-      issues: '常见问题'
+      issues: '常见问题',
+      poster: '下载海报'
     },
     editPanel: {
       tab: {
@@ -105,8 +109,22 @@ export default {
         list: '选择动画',
         title: 'Animation {index}'
       },
+      method: {
+        add: '使用技能(动作)',
+        run: '运行动作',
+        type: '动作类型',
+        duration: '动作时长',
+        delay: '动作延时',
+        iteration: '运行次数',
+        inifinite: '循环播放',
+        list: '选择动作',
+        title: '动作 {index}'
+      },
       common: {
-        empty: 'Select an element first please!'
+        empty: 'Select an element first please!',
+        ConfigProps: '属性设置',
+        commonStyle: '通用样式',
+        pageMode: '页面模式'
       }
     },
     tip: {

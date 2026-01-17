@@ -22,8 +22,10 @@ export default {
     useNow: 'Use it Now',
     preview: 'Preview',
     edit: 'Edit',
+    delete: 'Delete',
     createNewWork: 'Create New',
-    view: 'View Work'
+    view: 'View Work',
+    confirmDeleteTip: 'Confirm Delete {tip}?'
   },
   basicData: {
     viewData: 'View Data'
@@ -33,7 +35,8 @@ export default {
       components: 'Components',
       pages: 'Pages',
       templates: 'Templates',
-      tree: 'Tree'
+      tree: 'Tree',
+      preferences: 'Preferences'
     },
     pageManager: {
       title: 'Page {index}',
@@ -75,7 +78,8 @@ export default {
       importPSD: 'Import PSD',
       zoomIn: 'Zoom In{hotkey}',
       zoomOut: 'Zoom Out{hotkey}',
-      issues: 'Issues'
+      issues: 'Issues',
+      poster: 'Screenshot'
     },
     editPanel: {
       tab: {
@@ -97,7 +101,10 @@ export default {
         title: 'Animation {index}'
       },
       common: {
-        empty: 'Select an element first please!'
+        empty: 'Select an element first please!',
+        ConfigProps: 'Props',
+        commonStyle: 'CommonStyle',
+        pageMode: 'PageMode'
       }
     },
     tip: {

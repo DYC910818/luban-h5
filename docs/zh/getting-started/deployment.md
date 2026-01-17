@@ -1,10 +1,10 @@
 # 部署
-> 欢迎大家到[鲁班H5-社区](https://support.qq.com/products/93432/) 交流，在这里可以提问、反馈意见和建议，与作者直接互动
+> 欢迎大家到[鲁班 H5-社区](https://support.qq.com/products/93432/)交流，在这里可以提问、反馈意见和建议，与作者直接互动
 
 ## 阿里云/腾讯云/Digital Ocean
-> 以 Centos 为例，Ubuntu等其它发行版，请自行调整
+> 以 Centos 为例，Ubuntu 等其它发行版，请自行调整
 
-1. 首先需要安装一些基础的软件包，请自行安装（具体参照其官网文档）
+1. 首先需要安装一些基础的软件包，请自行安装 (具体参照其官网文档)
 >  `node、npm、yarn、pm2`
 
   ```bash
@@ -28,6 +28,7 @@
 ```bash
 git clone https://github.com/ly525/luban-h5.git
 cd luban-h5
+# 如果您遇到 sqlite3、node-gpy 等安装报错问题，请您执行 ./deploy/mirror.sh 配置npm 镜像为阿里云镜像(特别是为了解决二进制包安装问题)
 ./luban-h5.sh init  # 安装依赖，构建前后端
 ./luban-h5.sh start # 启动项目即可
 ./luban-h5.sh stop  # 停止服务
@@ -46,7 +47,7 @@ cd luban-h5
 
 ---
 
-> 欢迎大家到[鲁班H5-社区](https://support.qq.com/products/93432/) 交流，在这里可以提问、反馈意见和建议，与作者直接互动
+> 欢迎大家到[鲁班 H5-社区](https://support.qq.com/products/93432/)交流，在这里可以提问、反馈意见和建议，与作者直接互动
 
 
 <Vssue issueId="7" />

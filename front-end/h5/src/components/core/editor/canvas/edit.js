@@ -35,11 +35,17 @@ export default {
     clearHLine () {
       this.hLines = []
     },
-    calcVHLine (isPointMove) {
+    // 传入拖动点的位置,不传默认为 undefined,视为拖动组件本身
+    calcVHLine (point) {
+      const isPointMove = Boolean(point)
       const uuid = this.editingElement.uuid
       const referElements = this.elements.filter(e => e.uuid !== uuid)
       let referElementsXCoords = []
       let referElementsYCoords = []
+      let hasT = /t/.test(point)
+      let hasB = /b/.test(point)
+      let hasL = /l/.test(point)
+      let hasR = /r/.test(point)
       referElements.forEach(e => {
         const width = e.commonStyle.width
         const left = e.commonStyle.left
@@ -61,6 +67,7 @@ export default {
       })
 
       // e代表 editingElement
+      const commonStyle = this.editingElement.commonStyle
       const eleft = this.editingElement.commonStyle.left
       const etop = this.editingElement.commonStyle.top
       const ewidth = this.editingElement.commonStyle.width
@@ -74,7 +81,12 @@ export default {
           let offset = referX - eX
           if (Math.abs(offset) <= 5) {
             if (isPointMove) {
-              this.setElementPosition({ width: ewidth + offset })
+              // issue #360
+               if (hasL) {
+                 this.setElementPosition({ width: commonStyle.width - offset, left: eleft + offset })
+               } else if (hasR) {
+                 this.setElementPosition({ width: commonStyle.width + offset })
+               }
             } else {
               this.setElementPosition({ left: eleft + offset })
             }
@@ -88,7 +100,12 @@ export default {
           let offset = referY - eY
           if (Math.abs(offset) <= 5) {
             if (isPointMove) {
-              this.setElementPosition({ height: eheight + offset })
+              // issue #360
+              if (hasT) {
+               this.setElementPosition({ height: eheight - offset, top: offset + commonStyle.top })
+              } else if (hasB) {
+               this.setElementPosition({ height: eheight + offset })
+              }
             } else {
               this.setElementPosition({ top: etop + offset })
             }
@@ -109,11 +126,11 @@ export default {
      */
     handleElementMove (pos) {
       this.setElementPosition(pos)
-      this.calcVHLine(false)
+       this.calcVHLine()
     },
-    handlePointMove (pos) {
+    handlePointMove (pos, point) {
       this.setElementPosition(pos)
-      this.calcVHLine(true)
+      this.calcVHLine(point)
     },
     bindContextMenu (e) {
       // 优化右击菜单的显示，去除冗余的无效逻辑
@@ -193,6 +210,7 @@ export default {
                   props: element.getProps()
                 })
               }
+              const isEditingElement = this.editingElement && this.editingElement.uuid === element.uuid
               const data = {
                 style: {
                   width: '100%',
@@ -203,7 +221,8 @@ export default {
                 class: 'element-on-edit-canvas',
                 props: {
                   ...element.getProps(), // #6 #3,
-                  editorMode: 'edit'
+                  editorMode: 'edit',
+                  isEditingElement
                 },
                 // nativeOn: {
                 //   contextmenu: e => {
@@ -258,7 +277,7 @@ export default {
                     this.bindContextMenu(e)
                   }}
                 >
-                  {h(element.name, data)}
+                  {h(element.uuid, data)}
                 </Shape>
               )
             })
@@ -299,7 +318,13 @@ export default {
               <div class="adjust-line adjust-line-h"></div>
               <div class="adjust-button" onMousedown={this.mousedownForAdjustLine}><div class="indicator"></div></div>
               <div class="adjust-tip">
-                <span>320 x</span>
+                <a-input-number
+                  size="small"
+                  style="margin: 0 4px; width:60px;"
+                  value={this.work.width}
+                  onChange={width => { this.updateWork({ width }) }}
+                  />
+                <span>x</span>
                 <a-input-number
                   size="small"
                   style="margin: 0 4px; width:60px;"

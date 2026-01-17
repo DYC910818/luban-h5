@@ -2,6 +2,75 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.17.0](https://github.com/ly525/luban-h5/compare/v1.16.0...v1.17.0) (2021-05-23)
+
+
+### Features
+
+* 抽离作品信息组件，更新标题/描述自动保存;(autoSave after update workInfo); fix:[#310](https://github.com/ly525/luban-h5/issues/310) ([642938f](https://github.com/ly525/luban-h5/commit/642938ff7ccd02a991f4e66bd0fc922b91565e7e))
+
+
+### Bug Fixes
+
+* [#309](https://github.com/ly525/luban-h5/issues/309) ([21a4ba0](https://github.com/ly525/luban-h5/commit/21a4ba04c62e1f4cb1bd02f586391a4773b37d90))
+* **list-mixin:** 列表预览 链接id显示undefined bug ([bf2f777](https://github.com/ly525/luban-h5/commit/bf2f77726b8fcadac52a47a11faebb78c2a81484))
+* [#329](https://github.com/ly525/luban-h5/issues/329) ([4d93cf1](https://github.com/ly525/luban-h5/commit/4d93cf11d5884e170b4c84ff41a7a560dc085723))
+
+## [1.16.0](https://github.com/ly525/luban-h5/compare/v1.15.0...v1.16.0) (2021-03-21)
+
+
+### Features
+
+* script&action&data-source ([24201f6](https://github.com/ly525/luban-h5/commit/24201f631106b811dde877fbcd4cff3fba850068))
+* **component:** tinymce-editor ([0a10d92](https://github.com/ly525/luban-h5/commit/0a10d9261a083ea8bb179d98bdda1ac21a03d0e8))
+
+
+### Bug Fixes
+
+* [#253](https://github.com/ly525/luban-h5/issues/253) ([608c4c4](https://github.com/ly525/luban-h5/commit/608c4c463291779f53760e63f365aac9ce329cc6))
+* add id for data-source ([fb06873](https://github.com/ly525/luban-h5/commit/fb068732058476c5f1ae54891bc78b3990181b9c))
+* treat ds.pipe as String ([7a6ec09](https://github.com/ly525/luban-h5/commit/7a6ec094a9e6f1e6fcdfba26f30122f26a1d24f8))
+
+## [1.15.0](https://github.com/ly525/luban-h5/compare/v1.14.1...v1.15.0) (2021-03-21)
+
+
+### Features
+
+* **canvas:** adjust canvas width; #!zh: 支持调整画布宽度 ([7fe6408](https://github.com/ly525/luban-h5/commit/7fe6408f75e87bad6dc7a48fcf5e78167cd88ac9))
+* remove delete from template card ([d08ebdf](https://github.com/ly525/luban-h5/commit/d08ebdffdf7e2d4d89ec126053c402daf793c7af))
+* 支持制作海报(导出静态图、封面图) !#en: support download poster; [#135](https://github.com/ly525/luban-h5/issues/135) ([929ba0f](https://github.com/ly525/luban-h5/commit/929ba0fd1e84f18b38dd0eb36cfbb00a641b2283))
+
+
+### Bug Fixes
+
+* [#233](https://github.com/ly525/luban-h5/issues/233) add confirm before delete element; #!zh: 删除元素前需要确认 ([349d12e](https://github.com/ly525/luban-h5/commit/349d12efb666143faa463867083ce0a9eab0119b))
+* [#251](https://github.com/ly525/luban-h5/issues/251) ([c2233d2](https://github.com/ly525/luban-h5/commit/c2233d2239973c0cf5ee49f3446380a8377f84b8))
+* preview margin&padding; #!zh:预览margin&padding ([7b14d7c](https://github.com/ly525/luban-h5/commit/7b14d7c26952c386ef303852063235fe32b12243))
+
+### [1.14.1](https://github.com/ly525/luban-h5/compare/v1.14.0...v1.14.1) (2021-02-13)
+
+
+### Features
+
+* add alert&log for api 403 ([e492406](https://github.com/ly525/luban-h5/commit/e492406af58cf118f1bb3896ae546d6b4c616fa5))
+* add component tree; !#zh: 组件树 ([d34d717](https://github.com/ly525/luban-h5/commit/d34d717de4914ab40e2081b7cee6aa43f886a17a))
+* contextmenu support whitelist !#zh: 右键菜单支持元素黑白名单 ([b6c26b0](https://github.com/ly525/luban-h5/commit/b6c26b028825d092f32ca50346062e4e7cce6465))
+* contextmenu support whitelist !#zh: 右键菜单支持元素黑白名单 ([d503c3b](https://github.com/ly525/luban-h5/commit/d503c3b6548c807a5aa6465fcfb64defa44698e3))
+* refactor core-editor as npm package: @luban-h5/core-editor ([6e23b00](https://github.com/ly525/luban-h5/commit/6e23b00197fca18fe5a5f9a7903b267369c4ea1b))
+* **work:** delete work; #!zh: 支持删除作品 ([816ce3a](https://github.com/ly525/luban-h5/commit/816ce3ae202eb8ef6d6acc1185ce6e12038fe5d7))
+
+
+### Bug Fixes
+
+* [#241](https://github.com/ly525/luban-h5/issues/241) [#240](https://github.com/ly525/luban-h5/issues/240) ([3787d85](https://github.com/ly525/luban-h5/commit/3787d8574a801c78f2c0f25170d113ca011700e3))
+* [#250](https://github.com/ly525/luban-h5/issues/250) ([d1dcd2a](https://github.com/ly525/luban-h5/commit/d1dcd2a209710f189400d1fe939972ea6f987ea1))
+* [#293](https://github.com/ly525/luban-h5/issues/293) ([1406139](https://github.com/ly525/luban-h5/commit/1406139a91b81bcf62cc441966aef86b01f43eab))
+* add router to core-editor ([63a6b7b](https://github.com/ly525/luban-h5/commit/63a6b7b245548e77ec9e000c5d0b0001466598ae))
+* eslint ([c56da70](https://github.com/ly525/luban-h5/commit/c56da70a2391d23ea8955f05cebfbb7944912d55))
+* move canvas scale ratio to vuex ([4c3679c](https://github.com/ly525/luban-h5/commit/4c3679c42f539622b98e6c4e854c277c656a7114))
+* page manager ([b220828](https://github.com/ly525/luban-h5/commit/b220828de34459b64cce8c82c59eebafb4791a62))
+* use element.uuid to get editingElement ([4228dbb](https://github.com/ly525/luban-h5/commit/4228dbb79adb614fff068c4a092a17d8af857c1a))
+
 ## [1.14.0](https://github.com/ly525/luban-h5/compare/v1.13.2...v1.14.0) (2020-09-13)
 
 

@@ -19,13 +19,18 @@
   <meta content="black" name="apple-mobile-web-app-status-bar-style">
   <meta content="telephone=no" name="format-detection">
   <meta content="email=no" name="format-detection">
-  <script src="/third-libs/vue.js"></script>
-  <link rel="stylesheet" href="/third-libs/animate.min.css">
-  <link rel="stylesheet" href="/third-libs/swiper.min.css">
-  <script src="/third-libs/swiper.min.js"></script>
-  <script src="/third-libs/swiper-animation.umd.min.js"></script>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.min.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/animate.css@4.1.1/animate.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper@12.0.3/swiper.min.css">
+  <script src="https://unpkg.com/swiper@12.0.3/swiper.min.js"></script>
+  <script src="https://unpkg.com/swiper-animation@2.0.2/build/swiper-animation.min.js"></script>
+  <!-- <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js" async></script> -->
+  <script src="https://unpkg.com/echarts@4.9.0/dist/echarts.min.js"></script>
+  <script src="https://unpkg.com/v-charts@1.19.0/lib/index.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/v-charts@1.19.0/lib/style.min.css">
   <script>window.__work = <%- JSON.stringify(work) %></script>
-  <script src="/engine-assets/engine.umd.min.js"></script>
+  <script src="/engine-assets/engine.umd.js"></script>
   <style>
     /*
       scss 文件，用来生成下面一段 style 中的 css
@@ -45,7 +50,7 @@
       position: relative;
       display: flex;
       flex-wrap: nowrap;
-      width: 320px;
+      width: <%= work.width %>px;
       height: 568px;
 
       position: absolute;
@@ -55,7 +60,7 @@
 
       .phone-wrapper {
         position: absolute;
-        width: 320px;
+        width: <%= work.width %>px;
         height: 568px;
         display: inline-block;
         background: #fff;
@@ -125,7 +130,7 @@
       position: relative;
       display: flex;
       flex-wrap: nowrap;
-      width: 320px;
+      width: <%= work.width %>px;
       height: 568px;
       /* position: absolute;
       left: 0;
@@ -140,7 +145,7 @@
     }
     .preview-wrapper .phone-wrapper {
       position: absolute;
-      width: 320px;
+      width: <%= work.width %>px;
       height: 568px;
       display: inline-block;
       background: #fff;
@@ -211,11 +216,11 @@
 
       function updateViewport() {
         var scale = 1;
-        var w = document.documentElement.clientWidth || 320;
+        var w = document.documentElement.clientWidth || <%= work.width %>;
         // var h = document.documentElement.clientHeight || 568;
-        // scale = w/h >= 320/568 ? h/568 : w/320;
-        scale = w/320;
-        var viewport = "width=320, initial-scale=" + scale + ", maximum-scale=" + scale + ", user-scalable=no";
+        // scale = w/h >= <%= work.width %>/568 ? h/568 : w/<%= work.width %>;
+        scale = w/<%= work.width %>;
+        var viewport = "width=<%= work.width %>, initial-scale=" + scale + ", maximum-scale=" + scale + ", user-scalable=no";
         document.getElementById("viewport").setAttribute("content", viewport)
       }
 
@@ -244,7 +249,7 @@
       }
 
       function doPCActions() {
-        loadJS('https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js', drawQRcode);
+        loadJS('https://unpkg.com/qrcode/build/qrcode.min.js', drawQRcode);
       }
 
       isMobile() ? doMobileActions() : doPCActions();

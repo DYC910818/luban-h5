@@ -26,6 +26,7 @@ footer: GPL 3.0 Licensed | Copyright © 2019-present
 ```bash
 git clone https://github.com/ly525/luban-h5 && cd luban-h5
 # 安装依赖，构建前后端（安装依赖会耗时略长，请耐心等待）
+# 如果您遇到 sqlite3、node-gpy 等安装报错问题，请您执行 ./deploy/mirror.sh 配置npm 镜像为阿里云镜像(特别是为了解决二进制包安装问题)
 ./luban-h5.sh init
 
 # 启动项目访问 http://localhost:1337 即可
@@ -34,19 +35,19 @@ git clone https://github.com/ly525/luban-h5 && cd luban-h5
 # ./luban-h5.sh stop
 ```
 
-- 更多细节，请参照 [鲁班H5-在线文档](https://ly525.gitee.io/luban-h5/zh/) 的 [`快速开始`](https://ly525.gitee.io/luban-h5/zh/getting-started/quick-start.html) 章节，进行配置即可
+- 更多细节，请参照[鲁班 H5-在线文档](https://ly525.github.io/luban-h5/zh/)的 [`快速开始`](https://ly525.github.io/luban-h5/zh/getting-started/quick-start.html) 章节，进行配置即可
 
-- 如果遇到接口 403 问题，请参照 [`快速开始`](https://ly525.gitee.io/luban-h5/zh/getting-started/quick-start.html) 章节，搜索关键字：403 即可
+- 如果遇到接口 403 问题，请参照 [`快速开始`](https://ly525.github.io/luban-h5/zh/getting-started/quick-start.html) 章节，搜索关键字：403 即可
 
 ### 🔗Links/相关链接
  | 源码   | 文档   | 教程     | 社区 |
 | ------ | -------- | ------ | ------ |
-| [GitHub](https://github.com/ly525/luban-h5) | [中文文档](https://ly525.gitee.io/luban-h5/zh/) | [视频-快速开始(哔哩哔哩)](https://space.bilibili.com/121039466/channel/detail?cid=94066)       | [中文社区/论坛](https://support.qq.com/product/93432)
+| [GitHub](https://github.com/ly525/luban-h5) | [中文文档](https://ly525.github.io/luban-h5/zh/) | [视频-快速开始(哔哩哔哩)](https://space.bilibili.com/121039466/channel/detail?cid=94066)       | [中文社区/论坛](https://support.qq.com/product/93432)
 | [Gitee (国内镜像)](https://gitee.com/ly525/luban-h5)  | [English Docs](https://ly525.github.io/luban-h5/en/getting-started/introduction.html)  |   自定义组件教程(WIP)    | [Gitter](https://gitter.im/luban-h5/community)    |
 |  |  [README(En)](./README.en.md)    | [核心实现原理](https://juejin.im/post/5d6df27a6fb9a06b2d77eef9)  |      |
 
 
-### 🔗生态
+### 🔗 生态
 | 后端集成                                                                                           | 官方组件库                                                     | 支撑/辅助组件                                            | 自定义组件                                                             | RoadMap                                                    |
 |------------------------------------------------------------------------------------------------|-----------------------------------------------------------|----------------------------------------------------|-------------------------------------------------------------------|------------------------------------------------------------|
 | [Strapi.js (官方后端API)](http://localhost:8081/luban-h5/zh/ecosystem/#%E9%B2%81%E7%8F%ADh5%E7%94%9F%E6%80%81%E5%BB%BA%E8%AE%BE)                                      | [轮播图](https://github.com/luban-h5-components/lbp-slide)   | 图片库                                                | [自定义组件开发脚手架](https://github.com/luban-h5/vue-cli-plugin-lbhc)     | [RoadMap/开发计划](https://github.com/ly525/luban-h5/projects) |
@@ -56,17 +57,17 @@ git clone https://github.com/ly525/luban-h5 && cd luban-h5
 
 
 目录
-- [鲁班H5是什么？](#%E9%B2%81%E7%8F%ADh5%E6%98%AF%E4%BB%80%E4%B9%88)
+- [鲁班 H5 是什么？](#%E9%B2%81%E7%8F%ADh5%E6%98%AF%E4%BB%80%E4%B9%88)
 - [Demo](#Demo)
 - [Features](#features)
 - [快速开始](#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)
 - [更多说明](#%E6%9B%B4%E5%A4%9A%E8%AF%B4%E6%98%8E)
   * [前端组件说明](#%E5%89%8D%E7%AB%AF%E7%BB%84%E4%BB%B6%E8%AF%B4%E6%98%8E)
-  * [技术栈（当前）](#%E6%8A%80%E6%9C%AF%E6%A0%88%E5%BD%93%E5%89%8D)
-- [👨🏻‍💻👩🏻‍💻交流群](#%E4%BA%A4%E6%B5%81%E7%BE%A4)
+  * [技术栈 (当前)](#%E6%8A%80%E6%9C%AF%E6%A0%88%E5%BD%93%E5%89%8D)
+- [👨🏻‍💻👩🏻‍💻 交流群](#%E4%BA%A4%E6%B5%81%E7%BE%A4)
 
-### 鲁班H5是什么？
-鲁班H5是基于Vue2.0开发的，通过拖拽的形式，生成页面的工具，类似[易企秀](http://www.eqxiu.com/)、[百度 H5](https://h5.baidu.com) 等工具
+### 鲁班 H5 是什么？
+鲁班 H5 是基于 Vue2.0 开发的，通过拖拽的形式，生成页面的工具，类似[易企秀](http://www.eqxiu.com/)、[百度 H5](https://h5.baidu.com) 等工具
 
 
 ### Demo
@@ -76,7 +77,7 @@ git clone https://github.com/ly525/luban-h5 && cd luban-h5
 
 
 ### 快速开始
-请参照 [鲁班H5-在线文档](https://ly525.gitee.io/luban-h5/zh/) 的 `快速开始` 章节
+请参照[鲁班 H5-在线文档](https://ly525.github.io/luban-h5/zh/)的 `快速开始` 章节
 
 
 ### 交流群
@@ -86,16 +87,16 @@ git clone https://github.com/ly525/luban-h5 && cd luban-h5
 | <img src="https://user-images.githubusercontent.com/12668546/66585418-5cce1e80-ebb9-11e9-91c0-56f658f09e27.png" width="200" /> <br />请备注：鲁班H5交流| <img src="https://user-images.githubusercontent.com/12668546/65471913-ab827580-dea3-11e9-919c-870c9605c60f.png" width="200" />  | <img src="https://user-images.githubusercontent.com/12668546/90198376-157d7380-de04-11ea-8fb6-b53d33050741.png" width="200" /> |
 
 
-#### 技术栈（当前）
+#### 技术栈 (当前)
 1. 前端：[Vue.js](https://vuejs.org/v2/guide/)
 2. 后端：[Strapi](https://strapi.io/)
 3. 存储：[Sqlite](https://www.sqlite.org/)
 
 ## 如何贡献
-所有合理的改动、优化、修正，新的组件，或者文档的修正、更新 相关的提交都会被接受
+所有合理的改动、优化、修正，新的组件，或者文档的修正、更新相关的提交都会被接受
 
 ## 社区与交流群
-#### 论坛地址：[鲁班H5-社区](https://support.qq.com/products/93432/)
+#### 论坛地址：[鲁班 H5-社区](https://support.qq.com/products/93432/)
 #### 交流群
 | 钉钉群  | 微信公众号  |  微信 |
 |---|---|---|
@@ -103,4 +104,4 @@ git clone https://github.com/ly525/luban-h5 && cd luban-h5
 
 ---
 
-> 如果有问题，欢迎大家到[鲁班H5-社区](https://support.qq.com/products/93432/) 交流，在这里可以提问、反馈意见和建议，与作者直接互动
+> 如果有问题，欢迎大家到[鲁班 H5-社区](https://support.qq.com/products/93432/)交流，在这里可以提问、反馈意见和建议，与作者直接互动

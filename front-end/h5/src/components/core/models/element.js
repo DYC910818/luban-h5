@@ -1,6 +1,8 @@
-import { parsePx } from '@/utils/element.js'
+import Vue from 'vue'
+import { parsePx, guid, getPureDomText } from '@/utils/element.js'
+import { bindData } from '@/utils/data-binding.js'
 
-// #! 编辑状态，不可以点击的按钮，因为点击按钮会触发一些默认行为，比如表单提交等
+// #! 编辑状态，不可以点击的按钮，因为点击按钮会触发一些默认动作，比如表单提交等
 const disabledPluginsForEditMode = ['lbp-form-input', 'lbp-form-button', 'lbp-video']
 const cloneObj = (value) => JSON.parse(JSON.stringify(value))
 
@@ -13,13 +15,77 @@ const defaultStyle = {
   textAlign: 'center',
   color: '#000000',
   backgroundColor: 'rgba(255, 255, 255, 0)',
-  fontSize: 14
+  fontSize: 14,
+  margin: {
+    top: {
+      value: 0,
+      unit: 'px'
+    },
+    right: {
+      value: 0,
+      unit: 'px'
+    },
+    bottom: {
+      value: 0,
+      unit: 'px'
+    },
+    left: {
+      value: 0,
+      unit: 'px'
+    }
+  },
+  padding: {
+    top: {
+      value: 0,
+      unit: 'px'
+    },
+    right: {
+      value: 0,
+      unit: 'px'
+    },
+    bottom: {
+      value: 0,
+      unit: 'px'
+    },
+    left: {
+      value: 0,
+      unit: 'px'
+    }
+  },
+  border: {
+    top: {
+      value: 0,
+      unit: 'px'
+    },
+    right: {
+      value: 0,
+      unit: 'px'
+    },
+    bottom: {
+      value: 0,
+      unit: 'px'
+    },
+    left: {
+      value: 0,
+      unit: 'px'
+    },
+    color: {
+      value: '#000'
+    },
+    style: {
+      value: 'solid'
+    }
+  },
+  'border-style': 'solid',
+  boxModelPart: '' // 可选值 margin、padding、border
 }
 
-class Element {
+const numberReg = /^\d+$/
+export default class Element {
   constructor (ele) {
     this.name = ele.name
-    this.uuid = ele.uuid || +new Date()
+    this.pluginType = ele.name
+    this.uuid = this.getUUID(ele)
     /**
      * #!zh:
      * 之前版本代码：https://github.com/ly525/luban-h5/blob/a7875cbc73c0d18bc2459985ca3ce1d4dc44f141/front-end/h5/src/components/core/models/element.js#L21
@@ -34,12 +100,34 @@ class Element {
     this.pluginProps = this.getPluginProps(ele)
     this.commonStyle = this.getCommonStyle(ele)
     this.events = []
+    this.methodList = ele.methodList || []
+    /**
+      script item<{
+        id,
+        label,
+        value
+      }>
+     */
+    this.scripts = ele.scripts || []
     this.animations = ele.animations || []
+
+    this.registerGlobalComponent()
+  }
+
+  /**
+   * 如果uuid 是number 类型(老uuid通过时间戳生成)，则会报错：[Vue warn]: Invalid component name: "1598504639230". Component names should conform to valid custom element name in html5 specification.
+   *
+   * 如果uuid不存在/全为Number，则采用新规则生成uuid，否则采用老uuid
+   *
+   * @param {*} ele
+   */
+  getUUID (ele) {
+    return (!ele.uuid || numberReg.test(ele.uuid) || !ele.uuid.includes('_')) ? `${ele.name}_${guid()}` : ele.uuid
   }
 
   getCommonStyle (ele) {
     if (typeof ele.commonStyle === 'object') {
-      return cloneObj(ele.commonStyle)
+      return cloneObj({ ...defaultStyle, ...ele.commonStyle })
     }
     return {
       ...defaultStyle,
@@ -75,9 +163,27 @@ class Element {
 
     return pluginProps
   }
-
-  getStyle ({ position = 'static', isRem = false } = {}) {
-    if (this.name === 'lbp-background') {
+  packPosData (obj, prefix) {
+    let init = {}
+    Object.keys(obj).forEach(key => {
+      init[prefix + '-' + key] = obj[key].value + (obj[key].unit || '')
+    })
+    return init
+  }
+  packBorderData () {
+    const { top, right, bottom, left, color, style } = this.commonStyle.border
+    return {
+      /**
+       * 使用 border-left border-right 等方式，在 chrome 浏览器中会导致渲染问题
+       * 这里就将他拼接成完整的 border-width解决bug，不知道是什么原因
+       */
+      'border-width': `${top.value}${top.unit} ${right.value}${right.unit} ${bottom.value}${bottom.unit} ${left.value}${left.unit} `,
+      'border-style': style.value,
+      'border-color': color.value
+    }
+  }
+  getStyle ({ position = 'static', isRem = false, isNodeWrapper = true } = {}) {
+    if (this.name === 'lbp-background' || !isNodeWrapper) {
       return {
         width: '100%',
         height: '100%'
@@ -85,12 +191,20 @@ class Element {
     }
     const pluginProps = this.pluginProps
     const commonStyle = this.commonStyle
+    const { margin, padding } = commonStyle
+    // 由于在 defaultStyle 定义的时候是对象，这里需要将数据重新组装成 margin-top 这种形式
+    const boxModel = {
+      ...this.packPosData(margin, 'margin'),
+      ...this.packPosData(padding, 'padding'),
+      ...this.packBorderData()
+    }
     let style = {
       top: parsePx(pluginProps.top || commonStyle.top, isRem),
       left: parsePx(pluginProps.left || commonStyle.left, isRem),
       width: parsePx(pluginProps.width || commonStyle.width, isRem),
       height: parsePx(pluginProps.height || commonStyle.height, isRem),
       fontSize: parsePx(pluginProps.fontSize || commonStyle.fontSize, isRem),
+      ...boxModel,
       color: pluginProps.color || commonStyle.color,
       // backgroundColor: pluginProps.backgroundColor || commonStyle.backgroundColor,
       textAlign: pluginProps.textAlign || commonStyle.textAlign,
@@ -100,9 +214,15 @@ class Element {
     return style
   }
 
-  getProps ({ mode = 'edit' } = {}) {
+  getProps ({ mode = 'edit', previewPureText = false } = {}) {
+    const pluginProps = mode === 'preview' ? bindData(this.pluginProps, window) : this.pluginProps
+    // #!zh: 获取纯文本的原因：方便在组件树状态展示文本元素内容，如果直接展示，可能会是一个富文本
+    // #!en: Get pure text reason: To display the text element content in the component tree state, if displayed directly, it may be a rich text
+    if (this.name === 'lbp-text' && previewPureText) {
+      pluginProps.text = getPureDomText(pluginProps.text || '')
+    }
     return {
-      ...this.pluginProps,
+      ...pluginProps,
       disabled: disabledPluginsForEditMode.includes(this.name) && mode === 'edit'
     }
   }
@@ -122,19 +242,20 @@ class Element {
 
     if (this.animations.length > 0) {
       const animation = this.animations[0]
-      attrs['data-swiper-animation'] = animation.type // "fadeIn"
+      attrs['data-swiper-animation'] = `animate__${animation.type}` // "fadeIn"
       attrs['data-duration'] = `${animation.duration}s` // ".5s"
       attrs['data-delay'] = `${animation.delay}s` // "1s"
     }
     return attrs
   }
 
-  getPreviewData ({ position = 'static', isRem = false, mode = 'preview' } = {}) {
-    const style = this.getStyle({ position })
+  getPreviewData ({ position = 'static', isRem = false, mode = 'preview', isNodeWrapper = true } = {}) {
     const data = {
-      style,
+      // 与 edit 组件保持样式一致
+      style: this.getStyle({ position, isNodeWrapper }),
       props: this.getProps({ mode }),
-      attrs: this.getAttrs()
+      attrs: this.getAttrs(),
+      nativeOn: this.getEventHandlers()
     }
     return data
   }
@@ -151,6 +272,64 @@ class Element {
       }
     })
   }
-}
 
-export default Element
+  getEventHandlers () {
+    const Ctor = Vue.component(this.uuid)
+    const vm = new Ctor()
+    const handlers = this.methodList.reduce((handlers, method) => {
+      // bind is fine too：handlers[method.trigger] = vm[method.name].bind(vm, method.arguments)
+      handlers[method.trigger] = () => vm[method.name].apply(vm, method.arguments)
+      return handlers
+    }, {})
+    return handlers
+  }
+
+  registerGlobalComponent () {
+    const basePlugin = Vue.component(this.name)
+    const mixinList = this.scripts.map(script => new Function(script.content.replace('editorMethods', 'methodsConfig'))())
+    basePlugin && this._mixinScript(mixinList, basePlugin)
+  }
+
+  /**
+   *
+    interface Script {
+      id?: number;
+      label?: string;
+      value: string; //  `return { created() {} }`
+    }
+   * @param {Object} script:Script
+   */
+  mixinScript (script) {
+    const basePlugin = Vue.component(this.uuid)
+    let mixin = new Function(script.content)() || {}
+    // normalize mixin(对 mixin 做规范化处理)
+    mixin = {
+      ...mixin,
+      methodsConfig: mixin.methodsConfig || {}
+    }
+    this._mixinScript(mixin, basePlugin)
+  }
+
+  _mixinScript (mixinList, basePlugin = Vue.component(this.uuid)) {
+    // basePlugin 不传入 && 不存在
+    if (!basePlugin) return
+
+    if (!Array.isArray(mixinList)) {
+      mixinList = [mixinList]
+    }
+
+    let pluginWithMixins = mixinList.reduce((mixedPlugin, mixin) => {
+      mixin.methodsConfig = mixin.methodsConfig || {} // 处理为 undefined 的情况，更应该在 mixinScript 的时候，从入口处进行约束
+      // 这里需要注意：
+      // 因为在不同的脚本中，方法的配置信息字段都是：methodsConfig，因此根据 Vue.mixin 的规则，后mixin 的会覆盖前面的同名
+      // 因此需要将前面的 methodsConfig 和 新mixin.methodsConfig 进行合并，防止之前的 methodsConfig 消失了
+      mixin.methodsConfig = {
+        ...mixedPlugin.options.methodsConfig,
+        ...mixin.methodsConfig
+      }
+      return mixedPlugin.extend(mixin)
+    }, basePlugin)
+
+    Vue.component(this.uuid, pluginWithMixins)
+  }
+}
